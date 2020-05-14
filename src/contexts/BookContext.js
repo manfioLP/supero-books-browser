@@ -4,51 +4,42 @@ import uniqid from 'uniqid';
 export const BookContext = createContext();
 
 const BookContextProvider = ({ children }) => {
-  const [books, setBooks] = useState([
-    {
-      id: 1,
-      title: 'Control Your Stress as a Lovatinho',
-      author: 'Katupy Katupakera',
-      isbn: '0123456789123',
-      year: '1994',
-      publisher: 'Labimboca Records'
-    },
-    {
-      id: 2,
-      title: 'Best Tapioca\'s Receipts \n 12343214123',
-      author: 'Jaleclecler A.',
-      isbn: '4501236789456',
-      year: '2006',
-      publishe: 'Best Receipts'
-    },
-    {
-      id: 3,
-      title: 'AUBAPIKABAITA - Biography',
-      author: 'Poldo del Poldera',
-      isbn: '9302456789123',
-      year: '2012',
-      publisher: 'HOTMART'
-    },
-    {
-      id: 4,
-      title: 'The best of 2019 MAMADAS',
-      author: 'Osvaloko Juniosin2012',
-      isbn: '8527419630123',
-      year: '2019',
-      publisher: 'Labimboca Records'
-    },
-  ]);
 
-  const addBook = book => {
-    setBooks([...books, {...book, id: uniqid() }]);
+  const serverEndpoint = `https://cors-anywhere.herokuapp.com/`+'http://ec2-34-228-7-125.compute-1.amazonaws.com:1337/api';
+
+  const getAllBooks = async (page, setBooks, setCurrentPage, setTotal) => {
+    const res = await fetch(`${serverEndpoint}/book?page=${page}`, {
+      method: 'GET',
+      headers: new Headers({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Origin': 'localhost:3000'
+      })
+    });
+    res
+      .json()
+      .then(res => {
+        setBooks(res.data)
+        setTotal(res.total)
+      })
+      .catch(console.log)
+  };
+
+  const addBook = (book, setBooks) => {
+    // setBooks([...books, {...book, id: uniqid() }]);
+    window.alert('Not implemented')
   }
 
-  const deleteBook = id => {
-    setBooks(books.filter(book => book.id !== id));
+  const deleteBook = (id, setBooks) => {
+    // setBooks(books.filter(book => book.id !== id));
+    window.alert('Not implemented')
   }
+
+  {/*<BookContext.Provider value={{ books, addBook, deleteBook, getAllBooks }}>*/}
 
   return (
-    <BookContext.Provider value={{ books, addBook, deleteBook }}>
+    <BookContext.Provider value={{ addBook, deleteBook, getAllBooks }}>
       {children}
     </BookContext.Provider>
   );
